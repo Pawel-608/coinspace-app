@@ -52,8 +52,17 @@ const Transactions = ({wallet, userId}: { wallet: string, userId: number }) => {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                setTxs(data);
-                console.log(data)
+                const mappedTxs = data.map(
+                    tx => ({
+                        type: tx.sender == wallet ? "send" : "receive",
+                        amount: tx.amount,
+                        address: tx.sender == wallet ? tx.receiver_alias : tx.sender_alias,
+                        date: tx.created_at,
+                        signature: tx.signature
+                    })
+                )
+                setTxs(mappedTxs);
+                console.log(mappedTxs)
             } catch (error) {
                 console.error('Error fetching balance:', error);
             }
@@ -64,12 +73,9 @@ const Transactions = ({wallet, userId}: { wallet: string, userId: number }) => {
 
     return (
         <div className='flex flex-col items-center gap-5 w-full'>
-            <Transaction type='send' amount={1.023} address="@iDatsY" date="2024-03-15 15:21:11"/>
-            <Transaction type='receive' amount={0.023} address="@iDatsY" date="2024-03-15 15:21:11"/>
-            <Transaction type='receive' amount={1.023} address="@iDatsY" date="2024-03-15 15:21:11"/>
-            <Transaction type='send' amount={0.023} address="@iDatsY" date="2024-03-15 15:21:11"/>
-            <Transaction type='send' amount={0.023} address="@iDatsY" date="2024-03-15 15:21:11"/>
-            <Transaction type='send' amount={0.023} address="@iDatsY" date="2024-03-15 15:21:11"/>
+            {
+                txs.map(tx => <Transaction key={tx.signature} {...tx}/>)
+            }
         </div>
     )
 }
