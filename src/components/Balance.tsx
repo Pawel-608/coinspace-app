@@ -4,13 +4,15 @@ const formatBalance = (number: number): string => {
     return number.toFixed(4);
 };
 
-export default () => {
+const Balance = ({wallet}: { wallet: string }) => {
     const [balance, setBalance] = React.useState(0);
 
     React.useEffect(() => {
         const fetchBalance = async () => {
             try {
-                const response = await fetch('/api/balance?wallet=7YNb8jCrf8ymwemBBgwkCs2bXCeXMQCufJiKCCHBPkfC');
+                const response = await fetch('/api/balance?wallet=' + wallet, {
+                    cache: 'no-store'
+                });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -23,7 +25,7 @@ export default () => {
         };
 
         fetchBalance();
-    }, []);
+    }, [wallet]);
 
     const formattedBalance = formatBalance(balance)
 
@@ -39,6 +41,4 @@ export default () => {
     );
 };
 
-
-
-
+export default Balance

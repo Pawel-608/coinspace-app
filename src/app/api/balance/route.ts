@@ -29,11 +29,12 @@ export async function GET(request: NextRequest) {
 
     const balance = await getBalance(wallet_addr);
 
-    if (balance) {
+    if (balance !== null) {
       return new Response(JSON.stringify({ balance }), {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, max-age=0',
         },
       });
     } else {
@@ -41,6 +42,7 @@ export async function GET(request: NextRequest) {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, max-age=0',
         },
       });
     }

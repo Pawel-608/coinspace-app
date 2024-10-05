@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
 
-export default () => {
+const Actions = ({wallet}: { wallet: string }) => {
     const imgSize = 56
 
     return <div className='flex flex-row items-center justify-center gap-10 w-100'>
@@ -25,3 +25,5 @@ export default () => {
         </div>
     </div>
 }
+
+export default Actions

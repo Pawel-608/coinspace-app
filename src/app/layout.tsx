@@ -17,8 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className + " bg-stone-100"}>
-        <div className="flex flex-row	w-screen justify-center">
-          <div className="flex flex-row	w-screen justify-center max-w-[768px]">
+        <div className="flex flex-row w-screen justify-center">
+          <div className="flex flex-row	w-screen justify-center max-w-[640px]">
             {children}
           </div>
         </div>
