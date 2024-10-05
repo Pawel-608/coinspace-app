@@ -3,10 +3,7 @@
 import Actions from "@/components/Actions";
 import Balance from "@/components/Balance";
 import Transactions from "@/components/Transactions";
-import {useLaunchParams} from "@telegram-apps/sdk-react";
 import React, {useState} from "react";
-import {API_BASE_URL} from "@/app/config";
-
 
 
 export default function LaunchParamsPage() {
@@ -18,7 +15,7 @@ export default function LaunchParamsPage() {
     React.useEffect(() => {
         const findWalletId = async (userId) => {
             try {
-                const response = await fetch( '/api/wallet/' + userId);
+                const response = await fetch('/api/wallet/' + userId);
 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -36,16 +33,15 @@ export default function LaunchParamsPage() {
     }, []);
 
     return (
-        <div className="w-screen pt-10 px-2 flex flex-col gap-10">
-            {
-                walletAddress == null ? <></> : (<>
-                    <Balance wallet={walletAddress}/>
-                    <Actions wallet={walletAddress}/>
-                    <Transactions wallet={walletAddress} userId={userId}/>
-                </>
-                )
-            }
-
-        </div>
+            <div className="w-screen pt-10 px-2 flex flex-col gap-10">
+                {
+                    walletAddress == null ? <></> : (<>
+                            <Balance wallet={walletAddress}/>
+                            <Actions wallet={walletAddress}/>
+                            <Transactions wallet={walletAddress} userId={userId}/>
+                        </>
+                    )
+                }
+            </div>
     );
 };
