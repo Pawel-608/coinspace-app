@@ -38,7 +38,7 @@ const Transaction: React.FC<Transaction> = ({type, amount, address, date}) => {
     );
 };
 
-const Transactions = ({wallet, userId}: { wallet: string, userId: number }) => {
+const Transactions = ({wallet, userId}: { wallet: string, userId: any }) => {
     const [txs, setTxs] = React.useState([]);
 
 
@@ -53,7 +53,7 @@ const Transactions = ({wallet, userId}: { wallet: string, userId: number }) => {
                 }
                 const data = await response.json();
                 const mappedTxs = data.map(
-                    tx => ({
+                    (tx: any) => ({
                         type: tx.sender == wallet ? "send" : "receive",
                         amount: tx.amount,
                         address: tx.sender == wallet ? tx.receiver_alias : tx.sender_alias,
@@ -69,12 +69,12 @@ const Transactions = ({wallet, userId}: { wallet: string, userId: number }) => {
         };
 
         fetchTxs();
-    }, [userId]);
+    }, [userId, wallet]);
 
     return (
         <div className='flex flex-col items-center gap-5 w-full'>
             {
-                txs.map(tx => <Transaction key={tx.signature} {...tx}/>)
+                txs.map((tx: any) => <Transaction key={tx.signature} {...tx}/>)
             }
         </div>
     )

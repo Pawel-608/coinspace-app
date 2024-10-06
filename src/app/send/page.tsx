@@ -3,6 +3,7 @@
 import React, {useState, useEffect} from "react";
 import Link from 'next/link';
 import Image from 'next/image';
+import {useLaunchParams} from "@telegram-apps/sdk-react";
 
 const findUsers = async (name: string) => {
     try {
@@ -52,10 +53,11 @@ export default function SendPage() {
     const [copiedSignature, setCopiedSignature] = useState<boolean>(false);
 
     const [wallet, setWalletAddress] = useState(null)
-    const userId = 6946963704
+    const lp = useLaunchParams();
+    const userId = lp.initData?.user?.id
 
     React.useEffect(() => {
-        const findWalletId = async (userId: number) => {
+        const findWalletId = async (userId: number | undefined) => {
             try {
                 const response = await fetch('/api/wallet/' + userId);
 
@@ -72,7 +74,7 @@ export default function SendPage() {
         };
 
         findWalletId(userId);
-    }, []);
+    }, [userId]);
 
     React.useEffect(() => {
         const fetchBalance = async () => {
