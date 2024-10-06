@@ -20,7 +20,6 @@ const findUsers = async (name: string) => {
     }
 }
 
-
 const getWalletAddress = async (userId: number) => {
     try {
         const response = await fetch(`/api/users/wallet/${userId}`, {cache: 'no-store'});
@@ -173,7 +172,37 @@ export default function SendPage() {
     };
 
     return (
-        <div className="w-full pt-10 flex flex-col justify-center items-center gap-6">
+        txSignature ? (
+            <div className="flex items-center justify-center h-screen text-center">
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <strong className="font-bold">Transaction sent!</strong>
+                    <br />
+                    <p className="block sm:inline">Signature:  
+                        <span className="font-mono ml-1">{shortenAddress(txSignature, 6, 6)}</span>
+                        <button 
+                            onClick={() => copyToClipboard(txSignature)}
+                            className="ml-2 focus:outline-none"
+                            title="Copy to clipboard"
+                        >
+                            <Image
+                                src="/copy.svg"
+                                alt="Copy"
+                                width={16}
+                                height={16}
+                            />
+                        </button>
+                    </p>
+                    {copiedSignature && <span className="text-sm">Copied!<br /></span>}
+                    
+                    <Link href="/?no_redirect">
+                        <button className="bg-blue-500 text-white font-semibold py-2 px-4 rounded mt-4">
+                            Go back to Wallet
+                        </button>
+                    </Link>
+                </div>
+            </div>
+        ) :
+        (<div className="w-full pt-10 flex flex-col justify-center items-center gap-6">
             <h1 className="text-2xl font-semibold text-center">Send SOL</h1>
             <div className="flex flex-col gap-4 w-96 px-8">
                 <div className="flex flex-col gap-2">
@@ -200,22 +229,39 @@ export default function SendPage() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <label htmlFor="recipient" className="text-sm font-medium">Recipient</label>
-                    <input
-                        type="text"
-                        id="recipient"
-                        placeholder="Enter recipient name"
-                        className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        onChange={(e) => {
-                            setUserName(e.target.value)
-                        }}
-                        value={userName}
-                    />
-                    {userList.length > 0 && (
+                    <div className="flex items-center">
+                        <input
+                            type="text"
+                            id="recipient"
+                            placeholder="Enter recipient name"
+                            className={`w-screen p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${selectedUser ? 'bg-gray-200' : ''}`}
+                            onChange={(e) => {
+                                if (!selectedUser) {
+                                    setUserName(e.target.value);
+                                }
+                            }}
+                            value={userName}
+                            disabled={!!selectedUser} // Disable input when a user is selected
+                        />
+                        {selectedUser && (
+                            <button
+                                onClick={() => {
+                                    setSelectedUser(null);
+                                    setUserName('');
+                                }}
+                                className="absolute right-14 text-red-500"
+                                title="Clear selected user"
+                            >
+                                x
+                            </button>
+                        )}
+                    </div>
+                    {userList.length > 0 && !selectedUser && (
                         <ul className="mt-2 border border-gray-300 rounded-md">
                             {userList.map((user, index) => (
                                 <li
                                     key={index}
-                                    className="p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0 transition-colors"
+                                    className="p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0 transition-colors select-none"
                                     onClick={() => {
                                         setSelectedUser(user);
                                         setUserName(user.username)
@@ -229,28 +275,6 @@ export default function SendPage() {
                     )}
                 </div>
                 {error && <p className="text-red-500 text-sm">{error}</p>}
-                {txSignature && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                        <strong className="font-bold">Transaction sent!</strong>
-                        <br />
-                        <p className="block sm:inline">Signature:  
-                            <span className="font-mono ml-1">{shortenAddress(txSignature)}</span>
-                            <button 
-                                onClick={() => copyToClipboard(txSignature)}
-                                className="ml-2 focus:outline-none"
-                                title="Copy to clipboard"
-                            >
-                                <Image
-                                    src="/copy.svg"
-                                    alt="Copy"
-                                    width={16}
-                                    height={16}
-                                />
-                            </button>
-                        </p>
-                        {copiedSignature && <span className="text-sm">Copied!</span>}
-                    </div>
-                )}
                 <div className="flex justify-between mt-4">
                     <Link href="/">
                         <button
@@ -289,6 +313,6 @@ export default function SendPage() {
                     </div>
                 </div>
             )}
-        </div>
+        </div>)
     );
 };

@@ -18,6 +18,7 @@ const Actions = ({wallet}: { wallet: string }) => {
             />
             <p>Send</p>
         </Link>
+        <Link href={"/receive"}>
         <div className="flex flex-col gap-1 justify-center items-center cursor-pointer active:bg-stone-200 rounded-lg p-4 transition-colors">
             <Image
                 src="/recieve-external.svg"
@@ -27,6 +28,7 @@ const Actions = ({wallet}: { wallet: string }) => {
             />
             <p>Receive</p>
         </div>
+        </Link>
     </div>
 }
 
